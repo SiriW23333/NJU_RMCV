@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/wxy/RM/CLASS_5/Lesson_5/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/RM/CLASS_5/Lesson_5 -isystem /usr/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/src/main.cpp.o -c /home/wxy/RM/CLASS_5/Lesson_5/src/main.cpp",
+  "file": "/home/wxy/RM/CLASS_5/Lesson_5/src/main.cpp"
+},
+{
+  "directory": "/home/wxy/RM/CLASS_5/Lesson_5/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/RM/CLASS_5/Lesson_5 -isystem /usr/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/detector.cpp.o -c /home/wxy/RM/CLASS_5/Lesson_5/tasks/detector.cpp",
+  "file": "/home/wxy/RM/CLASS_5/Lesson_5/tasks/detector.cpp"
+},
+{
+  "directory": "/home/wxy/RM/CLASS_5/Lesson_5/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/RM/CLASS_5/Lesson_5 -isystem /usr/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/tracker.cpp.o -c /home/wxy/RM/CLASS_5/Lesson_5/tasks/tracker.cpp",
+  "file": "/home/wxy/RM/CLASS_5/Lesson_5/tasks/tracker.cpp"
+}
+]
