@@ -1,10 +1,18 @@
-#include "tasks/detector.hpp"
-#include "tools/img_tools.hpp"
+#include "detector.hpp"
+#include "img_tools.hpp"
 #include "fmt/core.h"
 #include "fmt/format.h"
 #include <opencv2/opencv.hpp>
-#include "tasks/armor.hpp"  // 确保该头文件包含了装甲板颜色和名称的定义
-#include "tasks/tracker.hpp" // 确保该头文件包含了ArmorPredictor类的定义
+#include "armor.hpp"
+#include "tracker.hpp"
+#include "PnP.hpp"
+#include <map>
+#include <vector>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
+#include <atomic>
 
 using namespace auto_aim;
 
@@ -19,56 +27,209 @@ static const cv::Mat distort_coeffs =
     (cv::Mat_<double>(1, 5) << -0.47562935060124745, 0.21831745829617311, 0.0004957613589406044, -0.00034617769548693592, 0);
 // clang-format on
 
-static const double LIGHTBAR_LENGTH = 0.056; // 灯条长度    单位：米
-static const double ARMOR_WIDTH = 0.135;     // 装甲板宽度  单位：米
-
-// 装甲板坐标系下4个点的坐标
-static const std::vector<cv::Point3f> object_points {
-    { -ARMOR_WIDTH/2 , -LIGHTBAR_LENGTH/2 , 0 },  // 点 1
-    { ARMOR_WIDTH/2 , -LIGHTBAR_LENGTH/2, 0 },  // 点 2
-    { ARMOR_WIDTH/2 , LIGHTBAR_LENGTH/2, 0 },  // 点 3
-    { -ARMOR_WIDTH/2 , LIGHTBAR_LENGTH/2, 0 }   // 点 4（修正了原代码中的错误）
+// 定义装甲板信息结构体，用于面板显示
+struct ArmorInfo {
+    std::string color;
+    std::string name;
+    float confidence;
+    cv::Point2f position;  // 装甲板中心位置
+    cv::Mat rvec;          // 旋转向量
+    cv::Mat tvec;          // 平移向量
+    double yaw, pitch, roll;  // 欧拉角
+    cv::Scalar color_value;   // 用于显示的颜色
 };
 
-int main(int argc, char *argv[])
-{
-    auto_aim::Detector detector;
+// 线程安全的帧缓冲
+class FrameQueue {
+public:
+    void push(const cv::Mat& frame) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        queue_.push(frame.clone()); // 复制帧，确保线程安全
+        lock.unlock();
+        cond_.notify_one();
+    }
 
-    // 您可以根据需要选择视频源
-    cv::VideoCapture cap("/home/wxy/RM/CLASS_5/Lesson_5/go_straight_and spin.mp4");
-    // 如果需要使用另一个视频源，请取消下面这行的注释并注释上面的行
-    // cv::VideoCapture cap("/home/wxy/RM/CLASS_4/CLASS_4/imgs/8radps.avi");
+    bool pop(cv::Mat& frame, int timeout_ms = 100) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        if (queue_.empty()) {
+            // 等待新帧或超时
+            auto result = cond_.wait_for(lock, std::chrono::milliseconds(timeout_ms), 
+                                       [this] { return !queue_.empty() || stop_; });
+            if (!result || stop_) return false;
+        }
+        
+        frame = queue_.front();
+        queue_.pop();
+        return true;
+    }
     
-    cv::Mat img;
+    void stop() {
+        std::unique_lock<std::mutex> lock(mutex_);
+        stop_ = true;
+        lock.unlock();
+        cond_.notify_all();
+    }
 
-    // 添加装甲板预测器
-    ArmorPredictor predictor;
+    bool empty() {
+        std::unique_lock<std::mutex> lock(mutex_);
+        return queue_.empty();
+    }
 
-    while (true)
-    {
-        cap >> img;
-        if (img.empty()) // 读取失败 或 视频结尾
-            break;
+    void clear() {
+        std::unique_lock<std::mutex> lock(mutex_);
+        std::queue<cv::Mat> empty;
+        std::swap(queue_, empty);
+    }
 
-        auto armors = detector.detect(img);
+private:
+    std::queue<cv::Mat> queue_;
+    std::mutex mutex_;
+    std::condition_variable cond_;
+    bool stop_ = false;
+};
 
-        // 创建副本用于绘制，保持原始图像不变
-        cv::Mat draw_img = img.clone();
+// 线程安全的装甲板结果缓冲
+class ResultBuffer {
+public:
+    void update(const cv::Mat& img, const std::vector<ArmorInfo>& armors) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        if (!img.empty()) {
+            result_image_ = img.clone();
+        }
+        armor_info_ = armors;
+        updated_ = true;
+        lock.unlock();
+    }
 
-        // 遍历所有识别到的装甲板
-        for (const auto& armor : armors)
-        {
+    bool get(cv::Mat& img, std::vector<ArmorInfo>& armors) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        if (!updated_ || result_image_.empty()) {
+            return false;
+        }
+        img = result_image_.clone();
+        armors = armor_info_;
+        return true;
+    }
+
+private:
+    cv::Mat result_image_;
+    std::vector<ArmorInfo> armor_info_;
+    std::mutex mutex_;
+    bool updated_ = false;
+};
+
+// 创建信息面板
+void createInfoPanel(cv::Mat& panel, const std::vector<ArmorInfo>& armors) {
+    // 创建白色背景面板
+    panel = cv::Mat(400, 600, CV_8UC3, cv::Scalar(255, 255, 255));
+    
+    // 画标题
+    cv::putText(panel, "Armor Detection Info Panel", 
+                cv::Point(20, 30), cv::FONT_HERSHEY_SIMPLEX, 
+                0.8, cv::Scalar(0, 0, 0), 2);
+    
+    // 画分隔线
+    cv::line(panel, cv::Point(0, 40), cv::Point(600, 40), 
+             cv::Scalar(0, 0, 0), 2);
+    
+    // 设置每个装甲板信息区域的高度
+    const int infoHeight = 80;
+    const int startY = 60;
+    
+    // 最多显示4个装甲板信息
+    int maxArmors = std::min(4, static_cast<int>(armors.size()));
+    
+    for (int i = 0; i < maxArmors; i++) {
+        const auto& armor = armors[i];
+        int y = startY + i * infoHeight;
+        
+        // 为每个装甲板绘制背景色块
+        cv::rectangle(panel, 
+                      cv::Point(10, y - 15), 
+                      cv::Point(590, y + infoHeight - 25), 
+                      cv::Scalar(240, 240, 240), 
+                      cv::FILLED);
+        
+        // 绘制装甲板编号和颜色信息
+        cv::putText(panel, 
+                    fmt::format("Armor #{}: {} {}", i+1, armor.color, armor.name), 
+                    cv::Point(20, y + 5), 
+                    cv::FONT_HERSHEY_SIMPLEX, 
+                    0.6, armor.color_value, 2);
+        
+        // 绘制置信度
+        cv::putText(panel, 
+                    fmt::format("Conf: {:.2f}", armor.confidence), 
+                    cv::Point(320, y + 5), 
+                    cv::FONT_HERSHEY_SIMPLEX, 
+                    0.5, cv::Scalar(0, 0, 0), 1);
+        
+        // 绘制位置信息
+        cv::putText(panel, 
+                    fmt::format("Pos: x {:.2f} y {:.2f} z {:.2f}", 
+                                armor.tvec.at<double>(0), 
+                                armor.tvec.at<double>(1), 
+                                armor.tvec.at<double>(2)), 
+                    cv::Point(20, y + 30), 
+                    cv::FONT_HERSHEY_SIMPLEX, 
+                    0.5, cv::Scalar(0, 0, 0), 1);
+        
+        // 绘制姿态信息
+        cv::putText(panel, 
+                    fmt::format("Pose: yaw {:.2f} pitch {:.2f} roll {:.2f}", 
+                                armor.yaw * 180 / CV_PI, 
+                                armor.pitch * 180 / CV_PI, 
+                                armor.roll * 180 / CV_PI), 
+                    cv::Point(20, y + 55), 
+                    cv::FONT_HERSHEY_SIMPLEX, 
+                    0.5, cv::Scalar(0, 0, 0), 1);
+    }
+    
+    // 如果没有检测到装甲板
+    if (armors.empty()) {
+        cv::putText(panel, "No armor detected", 
+                    cv::Point(150, 200), 
+                    cv::FONT_HERSHEY_SIMPLEX, 
+                    1, cv::Scalar(0, 0, 255), 2);
+    }
+}
+
+// 装甲板检测线程函数
+void detectionThread(FrameQueue& input_queue, 
+                    ResultBuffer& result_buffer, 
+                    std::atomic<bool>& running,
+                    Detector& detector,
+                    PNPSolver& pnp_solver) {
+    cv::Mat frame;
+    
+    while (running) {
+        // 获取帧，如果队列为空则等待
+        if (!input_queue.pop(frame)) {
+            if (!running) break;
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            continue;
+        }
+        
+        // 检测装甲板
+        auto armors = detector.detect(frame);
+        
+        // 创建副本用于绘制
+        cv::Mat draw_img = frame.clone();
+        std::vector<ArmorInfo> armorInfoList;
+        
+        // 处理每个装甲板
+        for (const auto& armor : armors) {
             // 绘制装甲板点
             tools::draw_points(draw_img, armor.points);
             
-            // 显示装甲板颜色、名称和置信度（来自CLASS_4的功能）
+            // 显示装甲板标识
             tools::draw_text(
                 draw_img,
                 fmt::format("{},{},{:.2f}", COLORS[armor.color], ARMOR_NAMES[armor.name], armor.confidence),
                 armor.left.top
             );
 
-            // PnP姿态解算（来自CLASS_5的功能）
+            // 准备图像点
             std::vector<cv::Point2f> img_points{
                 armor.left.top,
                 armor.right.top,
@@ -76,82 +237,127 @@ int main(int argc, char *argv[])
                 armor.left.bottom
             };
 
-            // 解算装甲板位姿
+            // PNP解算
             cv::Mat rvec, tvec;
-            cv::solvePnP(object_points, img_points, camera_matrix, distort_coeffs, rvec, tvec);
-
-            // 显示位置向量和旋转向量
-            tools::draw_text(draw_img, 
-                fmt::format("tvec: x{: .2f} y{: .2f} z{: .2f}", tvec.at<double>(0), tvec.at<double>(1), tvec.at<double>(2)), 
-                cv::Point2f(10, 60), 1.7, cv::Scalar(0, 255, 255), 3);
-            tools::draw_text(draw_img, 
-                fmt::format("rvec: x{: .2f} y{: .2f} z{: .2f}", rvec.at<double>(0), rvec.at<double>(1), rvec.at<double>(2)), 
-                cv::Point2f(10, 120), 1.7, cv::Scalar(0, 255, 255), 3);
-
-            // 转换旋转向量为欧拉角
-            cv::Mat rmat;
-            cv::Rodrigues(rvec, rmat);
-            double yaw = atan2(rmat.at<double>(1, 0), rmat.at<double>(0, 0));
-            double pitch = atan2(-rmat.at<double>(2, 0), 
-                sqrt(rmat.at<double>(2, 1) * rmat.at<double>(2, 1) + rmat.at<double>(2, 2) * rmat.at<double>(2, 2)));
-            double roll = atan2(rmat.at<double>(2, 1), rmat.at<double>(2, 2));
-
-            // 显示欧拉角
-            tools::draw_text(draw_img, 
-                fmt::format("yaw{: .2f} pitch{: .2f} roll{: .2f}", yaw, pitch, roll), 
-                cv::Point2f(10, 180), 1.7, cv::Scalar(0, 255, 255), 3);
-
-            // 更新预测器
-            predictor.update(tvec);
+            pnp_solver.solvePose(img_points, rvec, tvec);
             
-            // 获取估计的速度
-            cv::Point3f velocity = predictor.getVelocity();
+            // 获取欧拉角
+            double yaw, pitch, roll;
+            pnp_solver.getEulerAngles(rvec, yaw, pitch, roll);
             
-            // 预测0.1秒后的位置
-            float predict_time = 0.1f; // 单位：秒
-            cv::Point3f future_pos = predictor.predict(predict_time);
-            
-            // 显示预测信息
-            tools::draw_text(draw_img, 
-                fmt::format("vel: x{: .2f} y{: .2f} z{: .2f}", velocity.x, velocity.y, velocity.z), 
-                cv::Point2f(10, 240), 1.7, cv::Scalar(0, 255, 0), 3);
-                
-            tools::draw_text(draw_img, 
-                fmt::format("pred({:.1f}s): x{: .2f} y{: .2f} z{: .2f}", 
-                            predict_time, future_pos.x, future_pos.y, future_pos.z), 
-                cv::Point2f(10, 300), 1.7, cv::Scalar(0, 255, 0), 3);
-            
-            // 可视化历史轨迹
-            const auto& history = predictor.getHistory();
-            for (size_t i = 1; i < history.size(); ++i) {
-                cv::Point3f p1 = history[i-1];
-                cv::Point3f p2 = history[i];
-                
-                // 将3D点投影到图像平面
-                std::vector<cv::Point3f> pts3d = {p1, p2};
-                std::vector<cv::Point2f> pts2d;
-                cv::projectPoints(pts3d, rvec, tvec, camera_matrix, distort_coeffs, pts2d);
-                
-                // 绘制轨迹线
-                cv::line(draw_img, pts2d[0], pts2d[1], cv::Scalar(0, 255, 0), 2);
+            // 确定装甲板颜色
+            cv::Scalar color_value;
+            if (COLORS[armor.color] == "BLUE") {
+                color_value = cv::Scalar(255, 0, 0);
+            } else if (COLORS[armor.color] == "RED") {
+                color_value = cv::Scalar(0, 0, 255);
+            } else {
+                color_value = cv::Scalar(0, 128, 0);
             }
             
-            // 如果只处理第一个装甲板
-            break;
+            // 保存装甲板信息
+            ArmorInfo info;
+            info.color = COLORS[armor.color];
+            info.name = ARMOR_NAMES[armor.name];
+            info.confidence = armor.confidence;
+            info.position = (armor.left.top + armor.right.bottom) * 0.5;
+            info.rvec = rvec.clone();
+            info.tvec = tvec.clone();
+            info.yaw = yaw;
+            info.pitch = pitch;
+            info.roll = roll;
+            info.color_value = color_value;
+            
+            armorInfoList.push_back(info);
         }
-
         
-        // 显示前缩小图像
-        cv::Mat small_img;
-        float scale_factor = 0.2; // 缩放比例，可以根据需要调整(0.5-0.8之间比较合适)
-        cv::resize(draw_img, small_img, cv::Size(), scale_factor, scale_factor);
-        
-        cv::imshow("Armor Detection & PnP (press q to quit)", small_img);
-
-        if (cv::waitKey(20) == 'q')
-            break;
+        // 更新结果缓冲
+        result_buffer.update(draw_img, armorInfoList);
     }
+}
 
+int main(int argc, char *argv[])
+{
+    auto_aim::Detector detector;
+    auto_aim::PNPSolver pnp_solver(camera_matrix, distort_coeffs);
+    
+    // 打开视频文件
+    cv::VideoCapture cap("/home/wxy/NJU_RMCV/src/spin_staight.mp4");
+    if (!cap.isOpened()) {
+        std::cerr << "错误：无法打开视频文件！" << std::endl;
+        return -1;
+    }
+    
+    // 创建线程间通信的数据结构
+    FrameQueue frame_queue;
+    ResultBuffer result_buffer;
+    std::atomic<bool> running(true);
+    
+    // 启动装甲板检测线程
+    std::thread detect_thread(detectionThread, 
+                             std::ref(frame_queue), 
+                             std::ref(result_buffer), 
+                             std::ref(running), 
+                             std::ref(detector), 
+                             std::ref(pnp_solver));
+    
+    // 预分配内存
+    cv::Mat frame, result_img, small_img, infoPanel;
+    std::vector<ArmorInfo> armorInfoList;
+    
+    // 用于控制处理速度
+    int frame_count = 0;
+    const int process_every_n_frames = 1;  // 可调整为2或更大的值
+    
+    // 主循环：读取视频并显示结果
+    while (running) {
+        // 读取新帧
+        cap >> frame;
+        if (frame.empty()) {
+            // 视频结束，重新播放
+            cap.set(cv::CAP_PROP_POS_FRAMES, 0);
+            continue;
+        }
+        
+        // 每N帧处理一次
+        frame_count++;
+        if (frame_count % process_every_n_frames == 0) {
+            // 推送帧到队列中等待处理
+            frame_queue.push(frame);
+        }
+        
+        // 获取最新的处理结果
+        bool have_result = result_buffer.get(result_img, armorInfoList);
+        
+        // 显示结果
+        if (have_result) {
+            // 创建信息面板
+            createInfoPanel(infoPanel, armorInfoList);
+            
+            // 缩小图像
+            cv::resize(result_img, small_img, cv::Size(960, 540), 0, 0, cv::INTER_NEAREST);
+            
+            // 显示画面和信息面板
+            cv::imshow("Armor Detection (press q to quit)", small_img);
+            cv::imshow("Armor Info Panel", infoPanel);
+        }
+        
+        // 处理键盘事件
+        int key = cv::waitKey(1);
+        if (key == 'q') {
+            running = false;
+        } else if (key == 's') {
+            // 保存当前帧
+            cv::imwrite("screenshot.jpg", frame);
+        }
+    }
+    
+    // 清理资源
+    frame_queue.stop();
+    if (detect_thread.joinable()) {
+        detect_thread.join();
+    }
+    
     cv::destroyAllWindows();
     return 0;
 }

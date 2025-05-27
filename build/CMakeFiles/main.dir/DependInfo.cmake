@@ -8,9 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/wxy/RM/CLASS_5/Lesson_5/src/main.cpp" "CMakeFiles/main.dir/src/main.cpp.o" "gcc" "CMakeFiles/main.dir/src/main.cpp.o.d"
-  "/home/wxy/RM/CLASS_5/Lesson_5/tasks/detector.cpp" "CMakeFiles/main.dir/tasks/detector.cpp.o" "gcc" "CMakeFiles/main.dir/tasks/detector.cpp.o.d"
-  "/home/wxy/RM/CLASS_5/Lesson_5/tasks/tracker.cpp" "CMakeFiles/main.dir/tasks/tracker.cpp.o" "gcc" "CMakeFiles/main.dir/tasks/tracker.cpp.o.d"
+  "/home/wxy/NJU_RMCV/src/main.cpp" "CMakeFiles/main.dir/src/main.cpp.o" "gcc" "CMakeFiles/main.dir/src/main.cpp.o.d"
+  "/home/wxy/NJU_RMCV/tasks/PnP.cpp" "CMakeFiles/main.dir/tasks/PnP.cpp.o" "gcc" "CMakeFiles/main.dir/tasks/PnP.cpp.o.d"
+  "/home/wxy/NJU_RMCV/tasks/detector.cpp" "CMakeFiles/main.dir/tasks/detector.cpp.o" "gcc" "CMakeFiles/main.dir/tasks/detector.cpp.o.d"
+  "/home/wxy/NJU_RMCV/tasks/tracker.cpp" "CMakeFiles/main.dir/tasks/tracker.cpp.o" "gcc" "CMakeFiles/main.dir/tasks/tracker.cpp.o.d"
   )
 
 # Targets to which this target links.

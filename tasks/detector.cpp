@@ -1,19 +1,31 @@
 #include "detector.hpp"
+#include <opencv2/opencv.hpp>
 
 #include <fmt/format.h>
 
-#include "tools/img_tools.hpp"
+#include "img_tools.hpp"
 
 namespace auto_aim
 {
+  Detector::Detector()
+  {
+    // 初始化代码
+    try {
+      // 加载神经网络模型
+      net_ = cv::dnn::readNetFromONNX("/home/wxy/NJU_RMCV/tiny_resnet.onnx");
+    }
+    catch (const cv::Exception& e) {
+      std::cerr << "无法加载神经网络模型: " << e.what() << std::endl;
+    }
+  }
+
   std::list<Armor> Detector::detect(const cv::Mat &bgr_img)
   {
     // 彩色图转灰度图
-    cv::Mat gray_img;
+    static cv::Mat gray_img, binary_img; // 静态变量避免重复分配内存
+    gray_img.create(bgr_img.size(), CV_8UC1);
+    binary_img.create(bgr_img.size(), CV_8UC1);
     cv::cvtColor(bgr_img, gray_img, cv::COLOR_BGR2GRAY);
-
-    // 进行二值化
-    cv::Mat binary_img;
     cv::threshold(gray_img, binary_img, 170, 255, cv::THRESH_BINARY);
 
     // 获取轮廓点
@@ -22,7 +34,8 @@ namespace auto_aim
 
     // 获取灯条
     std::size_t lightbar_id = 0;
-    std::list<Lightbar> lightbars;
+    std::vector<Lightbar> lightbars;
+    lightbars.reserve(50); // 预分配内存
     for (const auto &contour : contours)
     {
       auto rotated_rect = cv::minAreaRect(contour);
@@ -37,8 +50,8 @@ namespace auto_aim
     }
 
     // 将灯条从左到右排序
-    lightbars.sort([](const Lightbar &a, const Lightbar &b)
-                   { return a.center.x < b.center.x; });
+    std::sort(lightbars.begin(), lightbars.end(),
+              [](const Lightbar &a, const Lightbar &b) { return a.center.x < b.center.x; });
 
     // 获取装甲板
     std::list<Armor> armors;
@@ -50,11 +63,39 @@ namespace auto_aim
         if (left->color != right->color)
           continue;
 
+        // 检查两个灯条之间是否有其他灯条
+        // 预处理灯条位置信息
+        // 在外层循环前创建灯条位置索引
+        std::vector<std::pair<float, size_t>> x_positions;
+        for (auto it = lightbars.begin(); it != lightbars.end(); ++it)
+        {
+          x_positions.emplace_back(it->center.x, it->id);
+        }
+        std::sort(x_positions.begin(), x_positions.end());
+
+        // 然后在检查时只需查找位置索引
+        bool has_lightbar_between = false;
+        auto left_idx = std::find_if(x_positions.begin(), x_positions.end(),
+                                      [&](const auto &p) { return p.second == left->id; });
+        auto right_idx = std::find_if(x_positions.begin(), x_positions.end(),
+                                       [&](const auto &p) { return p.second == right->id; });
+
+        if (std::distance(left_idx, right_idx) > 1)
+        {
+          has_lightbar_between = true;
+        }
+
+        // 如果两个灯条之间有其他灯条，则不构成装甲板
+        if (has_lightbar_between)
+          continue;
+
         auto armor = Armor(*left, *right);
         if (!check_geometry(armor))
           continue;
 
-        armor.pattern = get_pattern(bgr_img, armor);
+        // 修改这里的调用以匹配新的函数签名
+        armor.pattern = cv::Mat();  // 确保pattern已初始化
+        get_pattern(bgr_img, armor, armor.pattern);
 
         classify(armor);
         if (!check_name(armor))
@@ -91,20 +132,25 @@ namespace auto_aim
     return name_ok && confidence_ok;
   }
 
+  // 修改后 - 用掩码和均值计算优化
   Color Detector::get_color(const cv::Mat &bgr_img, const std::vector<cv::Point> &contour)
   {
-    int red_sum = 0, blue_sum = 0;
+    cv::Mat mask = cv::Mat::zeros(bgr_img.size(), CV_8UC1);
+    cv::drawContours(mask, std::vector<std::vector<cv::Point>>{contour}, 0, 255, cv::FILLED);
 
-    for (const auto &point : contour)
-    {
-      red_sum += bgr_img.at<cv::Vec3b>(point)[2];
-      blue_sum += bgr_img.at<cv::Vec3b>(point)[0];
-    }
-
-    return blue_sum > red_sum ? Color::blue : Color::red;
+    cv::Scalar mean = cv::mean(bgr_img, mask);
+    return mean[0] > mean[2] ? Color::blue : Color::red;
   }
 
-  cv::Mat Detector::get_pattern(const cv::Mat &bgr_img, const Armor &armor)
+  // 修改前：每次都创建新矩阵
+  // cv::Mat Detector::get_pattern(const cv::Mat &bgr_img, const Armor &armor)
+  // {
+  //   // ... 计算 ROI ...
+  //   return bgr_img(roi);
+  // }
+
+  // 修改后：避免不必要的复制，直接使用ROI
+  void Detector::get_pattern(const cv::Mat &bgr_img, const Armor &armor, cv::Mat &pattern)
   {
     // 延长灯条获得装甲板角点
     // 1.125 = 0.5 * armor_height / lightbar_length = 0.5 * 126mm / 56mm
@@ -121,33 +167,34 @@ namespace auto_aim
     auto roi_br = cv::Point(roi_right, roi_bottom);
     auto roi = cv::Rect(roi_tl, roi_br);
 
-    return bgr_img(roi);
+    bgr_img(roi).copyTo(pattern);
   }
 
   void Detector::classify(Armor &armor)
   {
-    cv::dnn::Net net = cv::dnn::readNetFromONNX("/home/wxy/RM/CLASS_5/Lesson_5/tiny_resnet.onnx");
+    // 直接使用已加载的网络 net
     cv::Mat gray;
     cv::cvtColor(armor.pattern, gray, cv::COLOR_BGR2GRAY);
 
-    auto input = cv::Mat(32, 32, CV_8UC1, cv::Scalar(0));
-    auto x_scale = static_cast<double>(32) / gray.cols;
-    auto y_scale = static_cast<double>(32) / gray.rows;
-    auto scale = std::min(x_scale, y_scale);
-    auto h = static_cast<int>(gray.rows * scale);
-    auto w = static_cast<int>(gray.cols * scale);
-    auto roi = cv::Rect(0, 0, w, h);
-    cv::resize(gray, input(roi), {w, h});
+    cv::Mat input = cv::Mat::zeros(32, 32, CV_8UC1);
+    double x_scale = 32.0 / gray.cols;
+    double y_scale = 32.0 / gray.rows;
+    double scale = std::min(x_scale, y_scale);
+    int w = static_cast<int>(gray.cols * scale);
+    int h = static_cast<int>(gray.rows * scale);
+
+    cv::Mat resized;
+    cv::resize(gray, resized, cv::Size(w, h));
+    resized.copyTo(input(cv::Rect(0, 0, w, h)));
 
     auto blob = cv::dnn::blobFromImage(input, 1.0 / 255.0, cv::Size(), cv::Scalar());
-
-    net.setInput(blob);
-    cv::Mat outputs = net.forward();
+    net_.setInput(blob);
+    cv::Mat outputs = net_.forward();
 
     // softmax
     float max = *std::max_element(outputs.begin<float>(), outputs.end<float>());
     cv::exp(outputs - max, outputs);
-    float sum = cv::sum(outputs)[0];
+    float sum = static_cast<float>(cv::sum(outputs)[0]);
     outputs /= sum;
 
     double confidence;
@@ -156,9 +203,6 @@ namespace auto_aim
     int label_id = label_point.x;
 
     armor.confidence = confidence;
-    // if (confidence > 0.5 && confidence < 0.8)
-    //   std::cout << confidence << std::endl;
     armor.name = static_cast<ArmorName>(label_id);
   }
-
 } // namespace auto_aim

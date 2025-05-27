@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/wxy/RM/CLASS_5/Lesson_5
+CMAKE_SOURCE_DIR = /home/wxy/NJU_RMCV
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/wxy/RM/CLASS_5/Lesson_5/build
+CMAKE_BINARY_DIR = /home/wxy/NJU_RMCV/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wxy/RM/CLASS_5/Lesson_5/build/CMakeFiles /home/wxy/RM/CLASS_5/Lesson_5/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/wxy/NJU_RMCV/build/CMakeFiles /home/wxy/NJU_RMCV/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wxy/RM/CLASS_5/Lesson_5/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/wxy/NJU_RMCV/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -153,6 +153,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+tasks/PnP.o: tasks/PnP.cpp.o
+.PHONY : tasks/PnP.o
+
+# target to build an object file
+tasks/PnP.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/PnP.cpp.o
+.PHONY : tasks/PnP.cpp.o
+
+tasks/PnP.i: tasks/PnP.cpp.i
+.PHONY : tasks/PnP.i
+
+# target to preprocess a source file
+tasks/PnP.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/PnP.cpp.i
+.PHONY : tasks/PnP.cpp.i
+
+tasks/PnP.s: tasks/PnP.cpp.s
+.PHONY : tasks/PnP.s
+
+# target to generate assembly for a file
+tasks/PnP.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/PnP.cpp.s
+.PHONY : tasks/PnP.cpp.s
+
 tasks/detector.o: tasks/detector.cpp.o
 .PHONY : tasks/detector.o
 
@@ -213,6 +237,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... tasks/PnP.o"
+	@echo "... tasks/PnP.i"
+	@echo "... tasks/PnP.s"
 	@echo "... tasks/detector.o"
 	@echo "... tasks/detector.i"
 	@echo "... tasks/detector.s"

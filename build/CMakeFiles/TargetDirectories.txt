@@ -1,3 +1,3 @@
-/home/wxy/RM/CLASS_5/Lesson_5/build/CMakeFiles/main.dir
-/home/wxy/RM/CLASS_5/Lesson_5/build/CMakeFiles/edit_cache.dir
-/home/wxy/RM/CLASS_5/Lesson_5/build/CMakeFiles/rebuild_cache.dir
+/home/wxy/NJU_RMCV/build/CMakeFiles/main.dir
+/home/wxy/NJU_RMCV/build/CMakeFiles/edit_cache.dir
+/home/wxy/NJU_RMCV/build/CMakeFiles/rebuild_cache.dir
