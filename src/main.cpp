@@ -7,6 +7,7 @@
 #include "tracker.hpp"
 #include "PnP.hpp"
 #include "ukf.hpp"
+#include "plot.hpp"  // 添加轨迹可视化头文件
 #include <map>
 #include <vector>
 #include <thread>
@@ -16,6 +17,10 @@
 #include <atomic>
 
 using namespace auto_aim;
+
+// 全局轨迹缓存和可视化器
+auto_aim::TrajectoryBuffer trajectory_buffer;
+auto_aim::TrajectoryVisualizer trajectory_visualizer(500, 500);
 
 // clang-format off
 //  相机内参
@@ -303,6 +308,23 @@ void detectionThread(FrameQueue& input_queue,
             info.ukf_state = ukf.getState();
             info.has_ukf = true;
             
+            // 添加轨迹点
+            if (info.has_ukf) {
+                // 使用UKF状态记录位置 (x, y, z)
+                trajectory_buffer.addPoint(armor_id, cv::Point3f(
+                    info.ukf_state(0),  // xc - 旋转中心x坐标
+                    info.ukf_state(6),  // yc - 旋转中心y坐标
+                    info.ukf_state(3)   // zc - 旋转中心z坐标
+                ));
+            } else {
+                // 如果没有UKF数据，直接使用PnP解算得到的位置
+                trajectory_buffer.addPoint(armor_id, cv::Point3f(
+                    tvec.at<double>(0),
+                    tvec.at<double>(1),
+                    tvec.at<double>(2)
+                ));
+            }
+            
             armorInfoList.push_back(info);
         }
         
@@ -317,7 +339,7 @@ int main(int argc, char *argv[])
     auto_aim::PNPSolver pnp_solver(camera_matrix, distort_coeffs);
     
     // 打开视频文件
-    cv::VideoCapture cap("/home/wxy/NJU_RMCV/src/spin_staight.mp4");
+    cv::VideoCapture cap("/home/wxy/NJU_RMCV/src/linear1.avi");
     if (!cap.isOpened()) {
         std::cerr << "错误：无法打开视频文件！" << std::endl;
         return -1;
@@ -369,12 +391,41 @@ int main(int argc, char *argv[])
             // 创建信息面板
             createInfoPanel(infoPanel, armorInfoList);
             
+            // 转换ArmorInfo到LineInfo
+            std::vector<auto_aim::LineInfo> lineInfoList;
+            for (const auto& armor : armorInfoList) {
+                auto_aim::LineInfo line;
+                line.color = armor.color;
+                line.name = armor.name;
+                line.confidence = armor.confidence;
+                line.position = armor.position;
+                line.rvec = armor.rvec.clone();  // 注意需要clone矩阵
+                line.tvec = armor.tvec.clone();
+                line.yaw = armor.yaw;
+                line.pitch = armor.pitch;
+                line.roll = armor.roll;
+                line.color_value = armor.color_value;
+                
+                // 复制UKF状态
+                if (armor.has_ukf) {
+                    line.ukf_state = armor.ukf_state;
+                    line.has_ukf = true;
+                }
+                
+                lineInfoList.push_back(line);
+            }
+            
+            // 创建轨迹面板
+            cv::Mat trajectoryPanel = trajectory_visualizer.createTrajectoryPanel(
+                trajectory_buffer, lineInfoList);
+            
             // 缩小图像
             cv::resize(result_img, small_img, cv::Size(960, 540), 0, 0, cv::INTER_NEAREST);
             
-            // 显示画面和信息面板
+            // 显示所有面板
             cv::imshow("Armor Detection (press q to quit)", small_img);
             cv::imshow("Armor Info Panel", infoPanel);
+            cv::imshow("Trajectory Visualization", trajectoryPanel);
         }
         
         // 处理键盘事件
@@ -389,6 +440,7 @@ int main(int argc, char *argv[])
     
     // 清理资源
     frame_queue.stop();
+    trajectory_buffer.clear();  // 清理轨迹数据
     if (detect_thread.joinable()) {
         detect_thread.join();
     }

@@ -17,7 +17,8 @@ add_executable(main
     tasks/detector.cpp 
     tasks/tracker.cpp 
     tasks/PnP.cpp
-    tasks/ukf.cpp           # 新增UKF源文件
+    tasks/ukf.cpp
+    tasks/plot.cpp       # 添加新的plot.cpp源文件
 )
 
 # 包含目录（推荐target_include_directories）

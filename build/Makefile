@@ -201,6 +201,30 @@ tasks/detector.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/detector.cpp.s
 .PHONY : tasks/detector.cpp.s
 
+tasks/plot.o: tasks/plot.cpp.o
+.PHONY : tasks/plot.o
+
+# target to build an object file
+tasks/plot.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/plot.cpp.o
+.PHONY : tasks/plot.cpp.o
+
+tasks/plot.i: tasks/plot.cpp.i
+.PHONY : tasks/plot.i
+
+# target to preprocess a source file
+tasks/plot.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/plot.cpp.i
+.PHONY : tasks/plot.cpp.i
+
+tasks/plot.s: tasks/plot.cpp.s
+.PHONY : tasks/plot.s
+
+# target to generate assembly for a file
+tasks/plot.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/plot.cpp.s
+.PHONY : tasks/plot.cpp.s
+
 tasks/tracker.o: tasks/tracker.cpp.o
 .PHONY : tasks/tracker.o
 
@@ -225,6 +249,30 @@ tasks/tracker.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/tracker.cpp.s
 .PHONY : tasks/tracker.cpp.s
 
+tasks/ukf.o: tasks/ukf.cpp.o
+.PHONY : tasks/ukf.o
+
+# target to build an object file
+tasks/ukf.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ukf.cpp.o
+.PHONY : tasks/ukf.cpp.o
+
+tasks/ukf.i: tasks/ukf.cpp.i
+.PHONY : tasks/ukf.i
+
+# target to preprocess a source file
+tasks/ukf.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ukf.cpp.i
+.PHONY : tasks/ukf.cpp.i
+
+tasks/ukf.s: tasks/ukf.cpp.s
+.PHONY : tasks/ukf.s
+
+# target to generate assembly for a file
+tasks/ukf.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ukf.cpp.s
+.PHONY : tasks/ukf.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -243,9 +291,15 @@ help:
 	@echo "... tasks/detector.o"
 	@echo "... tasks/detector.i"
 	@echo "... tasks/detector.s"
+	@echo "... tasks/plot.o"
+	@echo "... tasks/plot.i"
+	@echo "... tasks/plot.s"
 	@echo "... tasks/tracker.o"
 	@echo "... tasks/tracker.i"
 	@echo "... tasks/tracker.s"
+	@echo "... tasks/ukf.o"
+	@echo "... tasks/ukf.i"
+	@echo "... tasks/ukf.s"
 .PHONY : help
 
 

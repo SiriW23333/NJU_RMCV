@@ -5,8 +5,12 @@ file(REMOVE_RECURSE
   "CMakeFiles/main.dir/tasks/PnP.cpp.o.d"
   "CMakeFiles/main.dir/tasks/detector.cpp.o"
   "CMakeFiles/main.dir/tasks/detector.cpp.o.d"
+  "CMakeFiles/main.dir/tasks/plot.cpp.o"
+  "CMakeFiles/main.dir/tasks/plot.cpp.o.d"
   "CMakeFiles/main.dir/tasks/tracker.cpp.o"
   "CMakeFiles/main.dir/tasks/tracker.cpp.o.d"
+  "CMakeFiles/main.dir/tasks/ukf.cpp.o"
+  "CMakeFiles/main.dir/tasks/ukf.cpp.o.d"
   "main"
   "main.pdb"
 )
