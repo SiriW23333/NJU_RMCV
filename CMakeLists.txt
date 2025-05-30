@@ -9,16 +9,7 @@ find_package(OpenCV REQUIRED)
 find_package(fmt REQUIRED)
 find_package(CURL REQUIRED)
 find_package(TIFF REQUIRED)
-
-# 包含目录，确保能找到所有头文件
-include_directories(
-    ${OpenCV_INCLUDE_DIRS}
-    ${fmt_INCLUDE_DIRS}
-    ${CURL_INCLUDE_DIRS}
-    ${TIFF_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}
-)
+find_package(Eigen3 REQUIRED)
 
 # 添加所有源文件
 add_executable(main 
@@ -26,6 +17,18 @@ add_executable(main
     tasks/detector.cpp 
     tasks/tracker.cpp 
     tasks/PnP.cpp
+    tasks/ukf.cpp           # 新增UKF源文件
+)
+
+# 包含目录（推荐target_include_directories）
+target_include_directories(main PRIVATE
+    ${OpenCV_INCLUDE_DIRS}
+    ${fmt_INCLUDE_DIRS}
+    ${CURL_INCLUDE_DIRS}
+    ${TIFF_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIR}   # 新增Eigen头文件
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}
 )
 
 # 链接所需的库
@@ -34,7 +37,7 @@ target_link_libraries(main
     fmt::fmt
     ${CURL_LIBRARIES}
     ${TIFF_LIBRARIES}
-    pthread              # 添加pthread库支持多线程
+    pthread
 )
 
 # 保留原有的链接器标志

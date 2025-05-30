@@ -11,7 +11,8 @@ public:
 
     // 解算位姿
     void solvePose(const std::vector<cv::Point2f>& img_points, 
-                  cv::Mat& rvec, cv::Mat& tvec) const;
+                  cv::Mat& rvec, cv::Mat& tvec,
+                  double& yaw_out) const;
     
     // 获取欧拉角 - 使用旋转向量
     void getEulerAngles(const cv::Mat& rvec, double& yaw, double& pitch, double& roll) const;

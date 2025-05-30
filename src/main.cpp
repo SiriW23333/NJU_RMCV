@@ -6,6 +6,7 @@
 #include "armor.hpp"
 #include "tracker.hpp"
 #include "PnP.hpp"
+#include "ukf.hpp"
 #include <map>
 #include <vector>
 #include <thread>
@@ -32,11 +33,15 @@ struct ArmorInfo {
     std::string color;
     std::string name;
     float confidence;
-    cv::Point2f position;  // 装甲板中心位置
-    cv::Mat rvec;          // 旋转向量
-    cv::Mat tvec;          // 平移向量
-    double yaw, pitch, roll;  // 欧拉角
-    cv::Scalar color_value;   // 用于显示的颜色
+    cv::Point2f position;
+    cv::Mat rvec;
+    cv::Mat tvec;
+    double yaw, pitch, roll;
+    cv::Scalar color_value;
+
+    // 新增：UKF平滑后的三维位置、速度、加速度、yaw等
+    Eigen::Matrix<double, UKF::n_x, 1> ukf_state;
+    bool has_ukf = false;
 };
 
 // 线程安全的帧缓冲
@@ -120,72 +125,60 @@ private:
 
 // 创建信息面板
 void createInfoPanel(cv::Mat& panel, const std::vector<ArmorInfo>& armors) {
-    // 创建白色背景面板
     panel = cv::Mat(400, 600, CV_8UC3, cv::Scalar(255, 255, 255));
-    
-    // 画标题
     cv::putText(panel, "Armor Detection Info Panel", 
                 cv::Point(20, 30), cv::FONT_HERSHEY_SIMPLEX, 
                 0.8, cv::Scalar(0, 0, 0), 2);
-    
-    // 画分隔线
     cv::line(panel, cv::Point(0, 40), cv::Point(600, 40), 
              cv::Scalar(0, 0, 0), 2);
-    
-    // 设置每个装甲板信息区域的高度
+
     const int infoHeight = 80;
     const int startY = 60;
-    
-    // 最多显示4个装甲板信息
     int maxArmors = std::min(4, static_cast<int>(armors.size()));
-    
+
     for (int i = 0; i < maxArmors; i++) {
         const auto& armor = armors[i];
         int y = startY + i * infoHeight;
-        
-        // 为每个装甲板绘制背景色块
+
         cv::rectangle(panel, 
                       cv::Point(10, y - 15), 
                       cv::Point(590, y + infoHeight - 25), 
                       cv::Scalar(240, 240, 240), 
                       cv::FILLED);
-        
-        // 绘制装甲板编号和颜色信息
+
         cv::putText(panel, 
                     fmt::format("Armor #{}: {} {}", i+1, armor.color, armor.name), 
                     cv::Point(20, y + 5), 
                     cv::FONT_HERSHEY_SIMPLEX, 
                     0.6, armor.color_value, 2);
-        
-        // 绘制置信度
+
         cv::putText(panel, 
                     fmt::format("Conf: {:.2f}", armor.confidence), 
                     cv::Point(320, y + 5), 
                     cv::FONT_HERSHEY_SIMPLEX, 
                     0.5, cv::Scalar(0, 0, 0), 1);
-        
-        // 绘制位置信息
-        cv::putText(panel, 
-                    fmt::format("Pos: x {:.2f} y {:.2f} z {:.2f}", 
-                                armor.tvec.at<double>(0), 
-                                armor.tvec.at<double>(1), 
-                                armor.tvec.at<double>(2)), 
-                    cv::Point(20, y + 30), 
-                    cv::FONT_HERSHEY_SIMPLEX, 
-                    0.5, cv::Scalar(0, 0, 0), 1);
-        
-        // 绘制姿态信息
-        cv::putText(panel, 
-                    fmt::format("Pose: yaw {:.2f} pitch {:.2f} roll {:.2f}", 
-                                armor.yaw * 180 / CV_PI, 
-                                armor.pitch * 180 / CV_PI, 
-                                armor.roll * 180 / CV_PI), 
-                    cv::Point(20, y + 55), 
-                    cv::FONT_HERSHEY_SIMPLEX, 
-                    0.5, cv::Scalar(0, 0, 0), 1);
+
+        // 只显示UKF平滑后的三维位置和姿态
+        if (armor.has_ukf) {
+            cv::putText(panel, 
+                fmt::format("UKF Pos: x {:.2f} y {:.2f} z {:.2f}", 
+                    armor.ukf_state(0), armor.ukf_state(6), armor.ukf_state(3)),
+                cv::Point(20, y + 30), 
+                cv::FONT_HERSHEY_SIMPLEX, 
+                0.5, cv::Scalar(0, 128, 255), 1);
+
+            cv::putText(panel, 
+                fmt::format("UKF Yaw(deg): {:.2f}  R: {:.3f}", 
+                    armor.ukf_state(9) * 180.0 / CV_PI, armor.ukf_state(11)),
+                cv::Point(20, y + 55), 
+                cv::FONT_HERSHEY_SIMPLEX, 
+                0.5, cv::Scalar(0, 128, 255), 1);
+        } else {
+            cv::putText(panel, "No UKF data", cv::Point(20, y + 30),
+                        cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1);
+        }
     }
-    
-    // 如果没有检测到装甲板
+
     if (armors.empty()) {
         cv::putText(panel, "No armor detected", 
                     cv::Point(150, 200), 
@@ -201,7 +194,13 @@ void detectionThread(FrameQueue& input_queue,
                     Detector& detector,
                     PNPSolver& pnp_solver) {
     cv::Mat frame;
-    
+
+    // 新增：为每个装甲板维护一个UKF
+    std::map<std::string, UKF> ukf_map;
+    std::map<std::string, double> last_time_map;
+    double fps = 60.0; // 你的视频帧率
+    double dt = 1.0 / fps;
+
     while (running) {
         // 获取帧，如果队列为空则等待
         if (!input_queue.pop(frame)) {
@@ -212,7 +211,7 @@ void detectionThread(FrameQueue& input_queue,
         
         // 检测装甲板
         auto armors = detector.detect(frame);
-        
+
         // 创建副本用于绘制
         cv::Mat draw_img = frame.clone();
         std::vector<ArmorInfo> armorInfoList;
@@ -239,11 +238,12 @@ void detectionThread(FrameQueue& input_queue,
 
             // PNP解算
             cv::Mat rvec, tvec;
-            pnp_solver.solvePose(img_points, rvec, tvec);
+            double yaw_val;
+            pnp_solver.solvePose(img_points, rvec, tvec, yaw_val);
             
             // 获取欧拉角
-            double yaw, pitch, roll;
-            pnp_solver.getEulerAngles(rvec, yaw, pitch, roll);
+            double pitch, roll;
+            pnp_solver.getEulerAngles(rvec, yaw_val, pitch, roll);
             
             // 确定装甲板颜色
             cv::Scalar color_value;
@@ -255,7 +255,40 @@ void detectionThread(FrameQueue& input_queue,
                 color_value = cv::Scalar(0, 128, 0);
             }
             
-            // 保存装甲板信息
+            // 生成唯一ID（可用颜色+编号等）
+            std::string armor_id = fmt::format("{}_{}", COLORS[armor.color], ARMOR_NAMES[armor.name]);
+
+            // 观测向量zk = [xa, za, ya, yaw, r]
+            UKF::VectorZ z;
+            // xa, za, ya 由tvec和yaw、r计算，这里直接用tvec
+            double xa = tvec.at<double>(0);
+            double za = tvec.at<double>(2);
+            double ya = tvec.at<double>(1);
+            // yaw_val 已由 solvePose 得到
+            double r_val = 0.13 / 2; // 或根据实际情况赋值
+
+            z << xa, za, ya, yaw_val, r_val;
+
+            // UKF初始化
+            if (ukf_map.find(armor_id) == ukf_map.end()) {
+                UKF ukf;
+                UKF::VectorX x0 = UKF::VectorX::Zero();
+                x0(0) = xa; // xc
+                x0(3) = za; // zc
+                x0(6) = ya; // yc
+                x0(9) = yaw_val; // yaw
+                x0(11) = r_val; // r
+                ukf.init(x0, UKF::MatrixX::Identity());
+                ukf_map[armor_id] = ukf;
+                last_time_map[armor_id] = 0;
+            }
+
+            // UKF predict & update
+            auto& ukf = ukf_map[armor_id];
+            ukf.predict(dt);
+            ukf.update(z);
+
+            // 保存UKF状态到ArmorInfo
             ArmorInfo info;
             info.color = COLORS[armor.color];
             info.name = ARMOR_NAMES[armor.name];
@@ -263,10 +296,12 @@ void detectionThread(FrameQueue& input_queue,
             info.position = (armor.left.top + armor.right.bottom) * 0.5;
             info.rvec = rvec.clone();
             info.tvec = tvec.clone();
-            info.yaw = yaw;
+            info.yaw = yaw_val;
             info.pitch = pitch;
             info.roll = roll;
             info.color_value = color_value;
+            info.ukf_state = ukf.getState();
+            info.has_ukf = true;
             
             armorInfoList.push_back(info);
         }

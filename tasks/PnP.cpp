@@ -21,16 +21,21 @@ PNPSolver::PNPSolver(const cv::Mat& camera_matrix, const cv::Mat& distort_coeffs
 }
 
 void PNPSolver::solvePose(const std::vector<cv::Point2f>& img_points, 
-                         cv::Mat& rvec, cv::Mat& tvec) const {
+                         cv::Mat& rvec, cv::Mat& tvec,
+                         double& yaw_out) const {
     // 确保rvec和tvec已正确分配
     if (rvec.empty())
         rvec = cv::Mat::zeros(3, 1, CV_64FC1);
     if (tvec.empty())
         tvec = cv::Mat::zeros(3, 1, CV_64FC1);
         
-    // 使用SOLVEPNP_ITERATIVE方法可能在某些情况下更快
     cv::solvePnP(object_points_, img_points, camera_matrix_, distort_coeffs_, 
                 rvec, tvec, false, cv::SOLVEPNP_ITERATIVE);
+
+    // 计算yaw角
+    cv::Mat rmat;
+    cv::Rodrigues(rvec, rmat);
+    yaw_out = atan2(rmat.at<double>(1, 0), rmat.at<double>(0, 0));
 }
 
 void PNPSolver::getEulerAngles(const cv::Mat& rvec, double& yaw, double& pitch, double& roll) const {
