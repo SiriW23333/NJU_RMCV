@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/wxy/NJU_RMCV/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/src/main.cpp.o -c /home/wxy/NJU_RMCV/src/main.cpp",
+  "file": "/home/wxy/NJU_RMCV/src/main.cpp"
+},
+{
+  "directory": "/home/wxy/NJU_RMCV/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/detector.cpp.o -c /home/wxy/NJU_RMCV/tasks/detector.cpp",
+  "file": "/home/wxy/NJU_RMCV/tasks/detector.cpp"
+},
+{
+  "directory": "/home/wxy/NJU_RMCV/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/PnP.cpp.o -c /home/wxy/NJU_RMCV/tasks/PnP.cpp",
+  "file": "/home/wxy/NJU_RMCV/tasks/PnP.cpp"
+},
+{
+  "directory": "/home/wxy/NJU_RMCV/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/ekf.cpp.o -c /home/wxy/NJU_RMCV/tasks/ekf.cpp",
+  "file": "/home/wxy/NJU_RMCV/tasks/ekf.cpp"
+},
+{
+  "directory": "/home/wxy/NJU_RMCV/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/ekf_singer.cpp.o -c /home/wxy/NJU_RMCV/tasks/ekf_singer.cpp",
+  "file": "/home/wxy/NJU_RMCV/tasks/ekf_singer.cpp"
+},
+{
+  "directory": "/home/wxy/NJU_RMCV/build",
+  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/plot.cpp.o -c /home/wxy/NJU_RMCV/tasks/plot.cpp",
+  "file": "/home/wxy/NJU_RMCV/tasks/plot.cpp"
+}
+]
