@@ -30,7 +30,7 @@ void PNPSolver::solvePose(const std::vector<cv::Point2f>& img_points,
         tvec = cv::Mat::zeros(3, 1, CV_64FC1);
         
     cv::solvePnP(object_points_, img_points, camera_matrix_, distort_coeffs_, 
-                rvec, tvec, false, cv::SOLVEPNP_ITERATIVE);
+                rvec, tvec, false, cv::SOLVEPNP_IPPE);
 
     // 计算yaw角
     cv::Mat rmat;
@@ -42,9 +42,7 @@ void PNPSolver::getEulerAngles(const cv::Mat& rvec, double& yaw, double& pitch, 
     // 转换旋转向量为旋转矩阵
     cv::Mat rmat;
     cv::Rodrigues(rvec, rmat);
-    
-    // 计算欧拉角
-    yaw = atan2(rmat.at<double>(1, 0), rmat.at<double>(0, 0));
+    // 计算pitch和roll
     pitch = atan2(-rmat.at<double>(2, 0), 
         sqrt(rmat.at<double>(2, 1) * rmat.at<double>(2, 1) + rmat.at<double>(2, 2) * rmat.at<double>(2, 2)));
     roll = atan2(rmat.at<double>(2, 1), rmat.at<double>(2, 2));

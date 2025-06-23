@@ -34,47 +34,38 @@ import pandas as pd
 data = pd.read_csv('/home/wxy/NJU_RMCV/prediction_error.csv')
 
 # 只选取数值型列
-numeric_cols = ['res_x', 'res_y', 'res_z', 'res_yaw']
+numeric_cols = ['res_x', 'res_y', 'res_z']
 
 # 计算均值、方差
 means = data[numeric_cols].mean()
 variances = data[numeric_cols].var()
-print('Mean Residuals (x, y, z, yaw):', means)
-print('Variance Residuals (x, y, z, yaw):', variances)
+print('Mean Residuals (x, y, z):', means)
+print('Variance Residuals (x, y, z,):', variances)
 
 # 计算每个分量残差的绝对值均值（L1范数的均值）
 mean_abs_res = data[['res_x', 'res_y', 'res_z']].abs().mean()
 print('Mean Absolute Residuals (x, y, z):', mean_abs_res)
 
 # 绘图
-fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 
 # 位置误差
-axes[0,0].plot(data['res_x'], label='X Error')
-axes[0,0].plot(data['res_y'], label='Y Error') 
-axes[0,0].plot(data['res_z'], label='Z Error')
-axes[0,0].set_title('Position Prediction Error')
-axes[0,0].set_ylabel('Error (m)')
-axes[0,0].legend()
-axes[0,0].grid(True)
-
-# 角度误差
-axes[0,1].plot(data['res_yaw'] * 180 / np.pi)
-axes[0,1].set_title('Yaw Prediction Error')
-axes[0,1].set_ylabel('Error (degrees)')
-axes[0,1].grid(True)
+axes[0].plot(data['res_x'], label='X Error')
+axes[0].plot(data['res_y'], label='Y Error')
+axes[0].plot(data['res_z'], label='Z Error')
+axes[0].set_title('Position Prediction Error')
+axes[0].set_ylabel('Error (m)')
+axes[0].legend()
+axes[0].grid(True)
 
 # 误差分布直方图
-axes[1,0].hist(data['res_x'], bins=30, alpha=0.7, label='X')
-axes[1,0].hist(data['res_y'], bins=30, alpha=0.7, label='Y')
-axes[1,0].hist(data['res_z'], bins=30, alpha=0.7, label='Z')
-axes[1,0].set_title('Position Error Distribution')
-axes[1,0].set_xlabel('Error (m)')
-axes[1,0].legend()
+axes[1].hist(data['res_x'], bins=30, alpha=0.7, label='X')
+axes[1].hist(data['res_y'], bins=30, alpha=0.7, label='Y')
+axes[1].hist(data['res_z'], bins=30, alpha=0.7, label='Z')
+axes[1].set_title('Position Error Distribution')
+axes[1].set_xlabel('Error (m)')
+axes[1].legend()
 
-axes[1,1].hist(data['res_yaw'] * 180 / np.pi, bins=30)
-axes[1,1].set_title('Yaw Error Distribution')
-axes[1,1].set_xlabel('Error (degrees)')
 
 plt.tight_layout()
 plt.show()
@@ -84,4 +75,4 @@ print("Position Error Statistics (m):")
 print(f"X: mean={data['res_x'].mean():.4f}, std={data['res_x'].std():.4f}")
 print(f"Y: mean={data['res_y'].mean():.4f}, std={data['res_y'].std():.4f}")
 print(f"Z: mean={data['res_z'].mean():.4f}, std={data['res_z'].std():.4f}")
-print(f"Yaw: mean={data['res_yaw'].mean()*180/np.pi:.4f}°, std={data['res_yaw'].std()*180/np.pi:.4f}°")
+#print(f"Yaw: mean={data['res_yaw'].mean()*180/np.pi:.4f}°, std={data['res_yaw'].std()*180/np.pi:.4f}°")

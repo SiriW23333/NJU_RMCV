@@ -16,7 +16,8 @@ add_executable(main
     src/main.cpp 
     tasks/detector.cpp 
     tasks/PnP.cpp
-    tasks/ukf.cpp
+    tasks/ekf.cpp
+    tasks/ekf_singer.cpp
     tasks/plot.cpp       # 添加新的plot.cpp源文件
 )
 

@@ -201,6 +201,54 @@ tasks/detector.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/detector.cpp.s
 .PHONY : tasks/detector.cpp.s
 
+tasks/ekf.o: tasks/ekf.cpp.o
+.PHONY : tasks/ekf.o
+
+# target to build an object file
+tasks/ekf.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ekf.cpp.o
+.PHONY : tasks/ekf.cpp.o
+
+tasks/ekf.i: tasks/ekf.cpp.i
+.PHONY : tasks/ekf.i
+
+# target to preprocess a source file
+tasks/ekf.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ekf.cpp.i
+.PHONY : tasks/ekf.cpp.i
+
+tasks/ekf.s: tasks/ekf.cpp.s
+.PHONY : tasks/ekf.s
+
+# target to generate assembly for a file
+tasks/ekf.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ekf.cpp.s
+.PHONY : tasks/ekf.cpp.s
+
+tasks/ekf_singer.o: tasks/ekf_singer.cpp.o
+.PHONY : tasks/ekf_singer.o
+
+# target to build an object file
+tasks/ekf_singer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ekf_singer.cpp.o
+.PHONY : tasks/ekf_singer.cpp.o
+
+tasks/ekf_singer.i: tasks/ekf_singer.cpp.i
+.PHONY : tasks/ekf_singer.i
+
+# target to preprocess a source file
+tasks/ekf_singer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ekf_singer.cpp.i
+.PHONY : tasks/ekf_singer.cpp.i
+
+tasks/ekf_singer.s: tasks/ekf_singer.cpp.s
+.PHONY : tasks/ekf_singer.s
+
+# target to generate assembly for a file
+tasks/ekf_singer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ekf_singer.cpp.s
+.PHONY : tasks/ekf_singer.cpp.s
+
 tasks/plot.o: tasks/plot.cpp.o
 .PHONY : tasks/plot.o
 
@@ -225,30 +273,6 @@ tasks/plot.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/plot.cpp.s
 .PHONY : tasks/plot.cpp.s
 
-tasks/ukf.o: tasks/ukf.cpp.o
-.PHONY : tasks/ukf.o
-
-# target to build an object file
-tasks/ukf.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ukf.cpp.o
-.PHONY : tasks/ukf.cpp.o
-
-tasks/ukf.i: tasks/ukf.cpp.i
-.PHONY : tasks/ukf.i
-
-# target to preprocess a source file
-tasks/ukf.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ukf.cpp.i
-.PHONY : tasks/ukf.cpp.i
-
-tasks/ukf.s: tasks/ukf.cpp.s
-.PHONY : tasks/ukf.s
-
-# target to generate assembly for a file
-tasks/ukf.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/ukf.cpp.s
-.PHONY : tasks/ukf.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -267,12 +291,15 @@ help:
 	@echo "... tasks/detector.o"
 	@echo "... tasks/detector.i"
 	@echo "... tasks/detector.s"
+	@echo "... tasks/ekf.o"
+	@echo "... tasks/ekf.i"
+	@echo "... tasks/ekf.s"
+	@echo "... tasks/ekf_singer.o"
+	@echo "... tasks/ekf_singer.i"
+	@echo "... tasks/ekf_singer.s"
 	@echo "... tasks/plot.o"
 	@echo "... tasks/plot.i"
 	@echo "... tasks/plot.s"
-	@echo "... tasks/ukf.o"
-	@echo "... tasks/ukf.i"
-	@echo "... tasks/ukf.s"
 .PHONY : help
 
 

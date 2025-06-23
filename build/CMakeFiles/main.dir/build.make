@@ -111,24 +111,38 @@ CMakeFiles/main.dir/tasks/PnP.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/PnP.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/PnP.cpp -o CMakeFiles/main.dir/tasks/PnP.cpp.s
 
-CMakeFiles/main.dir/tasks/ukf.cpp.o: CMakeFiles/main.dir/flags.make
-CMakeFiles/main.dir/tasks/ukf.cpp.o: ../tasks/ukf.cpp
-CMakeFiles/main.dir/tasks/ukf.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/main.dir/tasks/ukf.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/ukf.cpp.o -MF CMakeFiles/main.dir/tasks/ukf.cpp.o.d -o CMakeFiles/main.dir/tasks/ukf.cpp.o -c /home/wxy/NJU_RMCV/tasks/ukf.cpp
+CMakeFiles/main.dir/tasks/ekf.cpp.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/tasks/ekf.cpp.o: ../tasks/ekf.cpp
+CMakeFiles/main.dir/tasks/ekf.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/main.dir/tasks/ekf.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/ekf.cpp.o -MF CMakeFiles/main.dir/tasks/ekf.cpp.o.d -o CMakeFiles/main.dir/tasks/ekf.cpp.o -c /home/wxy/NJU_RMCV/tasks/ekf.cpp
 
-CMakeFiles/main.dir/tasks/ukf.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/ukf.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/ukf.cpp > CMakeFiles/main.dir/tasks/ukf.cpp.i
+CMakeFiles/main.dir/tasks/ekf.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/ekf.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/ekf.cpp > CMakeFiles/main.dir/tasks/ekf.cpp.i
 
-CMakeFiles/main.dir/tasks/ukf.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/ukf.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/ukf.cpp -o CMakeFiles/main.dir/tasks/ukf.cpp.s
+CMakeFiles/main.dir/tasks/ekf.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/ekf.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/ekf.cpp -o CMakeFiles/main.dir/tasks/ekf.cpp.s
+
+CMakeFiles/main.dir/tasks/ekf_singer.cpp.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/tasks/ekf_singer.cpp.o: ../tasks/ekf_singer.cpp
+CMakeFiles/main.dir/tasks/ekf_singer.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/main.dir/tasks/ekf_singer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/ekf_singer.cpp.o -MF CMakeFiles/main.dir/tasks/ekf_singer.cpp.o.d -o CMakeFiles/main.dir/tasks/ekf_singer.cpp.o -c /home/wxy/NJU_RMCV/tasks/ekf_singer.cpp
+
+CMakeFiles/main.dir/tasks/ekf_singer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/ekf_singer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/ekf_singer.cpp > CMakeFiles/main.dir/tasks/ekf_singer.cpp.i
+
+CMakeFiles/main.dir/tasks/ekf_singer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/ekf_singer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/ekf_singer.cpp -o CMakeFiles/main.dir/tasks/ekf_singer.cpp.s
 
 CMakeFiles/main.dir/tasks/plot.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/tasks/plot.cpp.o: ../tasks/plot.cpp
 CMakeFiles/main.dir/tasks/plot.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/main.dir/tasks/plot.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/main.dir/tasks/plot.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/plot.cpp.o -MF CMakeFiles/main.dir/tasks/plot.cpp.o.d -o CMakeFiles/main.dir/tasks/plot.cpp.o -c /home/wxy/NJU_RMCV/tasks/plot.cpp
 
 CMakeFiles/main.dir/tasks/plot.cpp.i: cmake_force
@@ -144,7 +158,8 @@ main_OBJECTS = \
 "CMakeFiles/main.dir/src/main.cpp.o" \
 "CMakeFiles/main.dir/tasks/detector.cpp.o" \
 "CMakeFiles/main.dir/tasks/PnP.cpp.o" \
-"CMakeFiles/main.dir/tasks/ukf.cpp.o" \
+"CMakeFiles/main.dir/tasks/ekf.cpp.o" \
+"CMakeFiles/main.dir/tasks/ekf_singer.cpp.o" \
 "CMakeFiles/main.dir/tasks/plot.cpp.o"
 
 # External object files for target main
@@ -153,70 +168,71 @@ main_EXTERNAL_OBJECTS =
 main: CMakeFiles/main.dir/src/main.cpp.o
 main: CMakeFiles/main.dir/tasks/detector.cpp.o
 main: CMakeFiles/main.dir/tasks/PnP.cpp.o
-main: CMakeFiles/main.dir/tasks/ukf.cpp.o
+main: CMakeFiles/main.dir/tasks/ekf.cpp.o
+main: CMakeFiles/main.dir/tasks/ekf_singer.cpp.o
 main: CMakeFiles/main.dir/tasks/plot.cpp.o
 main: CMakeFiles/main.dir/build.make
-main: /home/wxy/anaconda3/lib/libopencv_gapi.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_stitching.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_alphamat.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_aruco.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_barcode.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_bgsegm.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_bioinspired.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_ccalib.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_cvv.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_dnn_objdetect.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_dnn_superres.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_dpm.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_face.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_freetype.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_fuzzy.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_hdf.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_hfs.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_img_hash.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_intensity_transform.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_line_descriptor.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_mcc.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_quality.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_rapid.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_reg.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_rgbd.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_saliency.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_stereo.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_structured_light.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_superres.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_surface_matching.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_tracking.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_videostab.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_wechat_qrcode.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_xfeatures2d.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_xobjdetect.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_xphoto.so.4.6.0
-main: /home/wxy/anaconda3/lib/libfmt.so.9.1.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_gapi.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_stitching.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_alphamat.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_aruco.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_bgsegm.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_bioinspired.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_ccalib.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_cvv.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_dnn_objdetect.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_dnn_superres.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_dpm.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_face.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_freetype.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_fuzzy.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_hdf.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_hfs.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_img_hash.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_intensity_transform.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_line_descriptor.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_mcc.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_quality.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_rapid.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_reg.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_rgbd.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_saliency.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_signal.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_stereo.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_structured_light.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_superres.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_surface_matching.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_tracking.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_videostab.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_wechat_qrcode.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_xfeatures2d.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_xobjdetect.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_xphoto.so.4.10.0
+main: /usr/lib/x86_64-linux-gnu/libfmt.so.8.1.1
 main: /usr/lib/x86_64-linux-gnu/libcurl.so
 main: /usr/lib/x86_64-linux-gnu/libtiff.so
-main: /home/wxy/anaconda3/lib/libopencv_shape.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_highgui.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_datasets.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_plot.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_text.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_ml.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_phase_unwrapping.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_optflow.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_ximgproc.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_video.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_videoio.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_imgcodecs.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_objdetect.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_calib3d.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_dnn.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_features2d.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_flann.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_photo.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_imgproc.so.4.6.0
-main: /home/wxy/anaconda3/lib/libopencv_core.so.4.6.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_shape.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_highgui.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_datasets.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_plot.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_text.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_ml.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_phase_unwrapping.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_optflow.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_ximgproc.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_video.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_videoio.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_imgcodecs.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_objdetect.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_calib3d.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_dnn.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_features2d.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_flann.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_photo.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_imgproc.so.4.10.0
+main: /home/wxy/anaconda3/envs/rm_cv/lib/libopencv_core.so.4.10.0
 main: CMakeFiles/main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
