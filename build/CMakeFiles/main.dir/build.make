@@ -73,91 +73,76 @@ CMakeFiles/main.dir/src/main.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/main.dir/src/main.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/main.dir/src/main.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/main.cpp.o -MF CMakeFiles/main.dir/src/main.cpp.o.d -o CMakeFiles/main.dir/src/main.cpp.o -c /home/wxy/NJU_RMCV/src/main.cpp
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/src/main.cpp.o -MF CMakeFiles/main.dir/src/main.cpp.o.d -o CMakeFiles/main.dir/src/main.cpp.o -c /home/wxy/NJU_RMCV/src/main.cpp
 
 CMakeFiles/main.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/main.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/src/main.cpp > CMakeFiles/main.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/src/main.cpp > CMakeFiles/main.dir/src/main.cpp.i
 
 CMakeFiles/main.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/main.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/src/main.cpp -o CMakeFiles/main.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/src/main.cpp -o CMakeFiles/main.dir/src/main.cpp.s
 
 CMakeFiles/main.dir/tasks/detector.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/tasks/detector.cpp.o: ../tasks/detector.cpp
 CMakeFiles/main.dir/tasks/detector.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/main.dir/tasks/detector.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/detector.cpp.o -MF CMakeFiles/main.dir/tasks/detector.cpp.o.d -o CMakeFiles/main.dir/tasks/detector.cpp.o -c /home/wxy/NJU_RMCV/tasks/detector.cpp
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/detector.cpp.o -MF CMakeFiles/main.dir/tasks/detector.cpp.o.d -o CMakeFiles/main.dir/tasks/detector.cpp.o -c /home/wxy/NJU_RMCV/tasks/detector.cpp
 
 CMakeFiles/main.dir/tasks/detector.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/detector.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/detector.cpp > CMakeFiles/main.dir/tasks/detector.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/detector.cpp > CMakeFiles/main.dir/tasks/detector.cpp.i
 
 CMakeFiles/main.dir/tasks/detector.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/detector.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/detector.cpp -o CMakeFiles/main.dir/tasks/detector.cpp.s
-
-CMakeFiles/main.dir/tasks/tracker.cpp.o: CMakeFiles/main.dir/flags.make
-CMakeFiles/main.dir/tasks/tracker.cpp.o: ../tasks/tracker.cpp
-CMakeFiles/main.dir/tasks/tracker.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/main.dir/tasks/tracker.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/tracker.cpp.o -MF CMakeFiles/main.dir/tasks/tracker.cpp.o.d -o CMakeFiles/main.dir/tasks/tracker.cpp.o -c /home/wxy/NJU_RMCV/tasks/tracker.cpp
-
-CMakeFiles/main.dir/tasks/tracker.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/tracker.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/tracker.cpp > CMakeFiles/main.dir/tasks/tracker.cpp.i
-
-CMakeFiles/main.dir/tasks/tracker.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/tracker.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/tracker.cpp -o CMakeFiles/main.dir/tasks/tracker.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/detector.cpp -o CMakeFiles/main.dir/tasks/detector.cpp.s
 
 CMakeFiles/main.dir/tasks/PnP.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/tasks/PnP.cpp.o: ../tasks/PnP.cpp
 CMakeFiles/main.dir/tasks/PnP.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/main.dir/tasks/PnP.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/PnP.cpp.o -MF CMakeFiles/main.dir/tasks/PnP.cpp.o.d -o CMakeFiles/main.dir/tasks/PnP.cpp.o -c /home/wxy/NJU_RMCV/tasks/PnP.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/main.dir/tasks/PnP.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/PnP.cpp.o -MF CMakeFiles/main.dir/tasks/PnP.cpp.o.d -o CMakeFiles/main.dir/tasks/PnP.cpp.o -c /home/wxy/NJU_RMCV/tasks/PnP.cpp
 
 CMakeFiles/main.dir/tasks/PnP.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/PnP.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/PnP.cpp > CMakeFiles/main.dir/tasks/PnP.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/PnP.cpp > CMakeFiles/main.dir/tasks/PnP.cpp.i
 
 CMakeFiles/main.dir/tasks/PnP.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/PnP.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/PnP.cpp -o CMakeFiles/main.dir/tasks/PnP.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/PnP.cpp -o CMakeFiles/main.dir/tasks/PnP.cpp.s
 
 CMakeFiles/main.dir/tasks/ukf.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/tasks/ukf.cpp.o: ../tasks/ukf.cpp
 CMakeFiles/main.dir/tasks/ukf.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/main.dir/tasks/ukf.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/ukf.cpp.o -MF CMakeFiles/main.dir/tasks/ukf.cpp.o.d -o CMakeFiles/main.dir/tasks/ukf.cpp.o -c /home/wxy/NJU_RMCV/tasks/ukf.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/main.dir/tasks/ukf.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/ukf.cpp.o -MF CMakeFiles/main.dir/tasks/ukf.cpp.o.d -o CMakeFiles/main.dir/tasks/ukf.cpp.o -c /home/wxy/NJU_RMCV/tasks/ukf.cpp
 
 CMakeFiles/main.dir/tasks/ukf.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/ukf.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/ukf.cpp > CMakeFiles/main.dir/tasks/ukf.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/ukf.cpp > CMakeFiles/main.dir/tasks/ukf.cpp.i
 
 CMakeFiles/main.dir/tasks/ukf.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/ukf.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/ukf.cpp -o CMakeFiles/main.dir/tasks/ukf.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/ukf.cpp -o CMakeFiles/main.dir/tasks/ukf.cpp.s
 
 CMakeFiles/main.dir/tasks/plot.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/tasks/plot.cpp.o: ../tasks/plot.cpp
 CMakeFiles/main.dir/tasks/plot.cpp.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/main.dir/tasks/plot.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/plot.cpp.o -MF CMakeFiles/main.dir/tasks/plot.cpp.o.d -o CMakeFiles/main.dir/tasks/plot.cpp.o -c /home/wxy/NJU_RMCV/tasks/plot.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/main.dir/tasks/plot.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/main.dir/tasks/plot.cpp.o -MF CMakeFiles/main.dir/tasks/plot.cpp.o.d -o CMakeFiles/main.dir/tasks/plot.cpp.o -c /home/wxy/NJU_RMCV/tasks/plot.cpp
 
 CMakeFiles/main.dir/tasks/plot.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/tasks/plot.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/plot.cpp > CMakeFiles/main.dir/tasks/plot.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wxy/NJU_RMCV/tasks/plot.cpp > CMakeFiles/main.dir/tasks/plot.cpp.i
 
 CMakeFiles/main.dir/tasks/plot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/tasks/plot.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/plot.cpp -o CMakeFiles/main.dir/tasks/plot.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wxy/NJU_RMCV/tasks/plot.cpp -o CMakeFiles/main.dir/tasks/plot.cpp.s
 
 # Object files for target main
 main_OBJECTS = \
 "CMakeFiles/main.dir/src/main.cpp.o" \
 "CMakeFiles/main.dir/tasks/detector.cpp.o" \
-"CMakeFiles/main.dir/tasks/tracker.cpp.o" \
 "CMakeFiles/main.dir/tasks/PnP.cpp.o" \
 "CMakeFiles/main.dir/tasks/ukf.cpp.o" \
 "CMakeFiles/main.dir/tasks/plot.cpp.o"
@@ -167,7 +152,6 @@ main_EXTERNAL_OBJECTS =
 
 main: CMakeFiles/main.dir/src/main.cpp.o
 main: CMakeFiles/main.dir/tasks/detector.cpp.o
-main: CMakeFiles/main.dir/tasks/tracker.cpp.o
 main: CMakeFiles/main.dir/tasks/PnP.cpp.o
 main: CMakeFiles/main.dir/tasks/ukf.cpp.o
 main: CMakeFiles/main.dir/tasks/plot.cpp.o
@@ -232,7 +216,7 @@ main: /home/wxy/anaconda3/lib/libopencv_photo.so.4.6.0
 main: /home/wxy/anaconda3/lib/libopencv_imgproc.so.4.6.0
 main: /home/wxy/anaconda3/lib/libopencv_core.so.4.6.0
 main: CMakeFiles/main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/wxy/NJU_RMCV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

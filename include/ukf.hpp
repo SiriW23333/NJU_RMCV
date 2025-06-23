@@ -1,6 +1,7 @@
 #pragma once
 #include <Eigen/Dense>
 #include <vector>
+#include <opencv2/opencv.hpp>
 
 class UKF {
 public:
@@ -20,6 +21,9 @@ public:
 
     VectorX getState() const { return x_; }
     MatrixX getCovariance() const { return P_; }
+    
+    // 添加预测位置方法
+    cv::Point3f predictPosition(double predict_time = 0.0) const;
 
 private:
     // 状态转移函数

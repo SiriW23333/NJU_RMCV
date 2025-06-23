@@ -15,7 +15,6 @@ find_package(Eigen3 REQUIRED)
 add_executable(main 
     src/main.cpp 
     tasks/detector.cpp 
-    tasks/tracker.cpp 
     tasks/PnP.cpp
     tasks/ukf.cpp
     tasks/plot.cpp       # 添加新的plot.cpp源文件

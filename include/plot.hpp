@@ -10,8 +10,7 @@
 
 namespace auto_aim {
 
-
-// 装甲板信息结构体定义（如果已在其他头文件中定义，请包含该头文件并删除此处定义）
+// 轨迹信息结构体定义
 struct LineInfo {
     std::string color;
     std::string name;
@@ -71,7 +70,7 @@ private:
     cv::Scalar bg_color_ = cv::Scalar(0, 0, 0);
     cv::Scalar grid_color_ = cv::Scalar(30, 30, 30);
     int grid_size_ = 50;
-    float scale_ = 100.0f; // 缩放因子，实际坐标到像素坐标
+    float scale_ = 100.0f;
     
     // 绘制网格线
     void drawGrid(cv::Mat& panel) const;

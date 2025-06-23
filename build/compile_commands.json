@@ -11,11 +11,6 @@
 },
 {
   "directory": "/home/wxy/NJU_RMCV/build",
-  "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/tracker.cpp.o -c /home/wxy/NJU_RMCV/tasks/tracker.cpp",
-  "file": "/home/wxy/NJU_RMCV/tasks/tracker.cpp"
-},
-{
-  "directory": "/home/wxy/NJU_RMCV/build",
   "command": "/usr/bin/g++ -DFMT_SHARED -I/home/wxy/anaconda3/include/eigen3 -I/home/wxy/NJU_RMCV/include -I/home/wxy/NJU_RMCV -isystem /home/wxy/anaconda3/include/opencv4 -isystem /home/wxy/anaconda3/include -g -o CMakeFiles/main.dir/tasks/PnP.cpp.o -c /home/wxy/NJU_RMCV/tasks/PnP.cpp",
   "file": "/home/wxy/NJU_RMCV/tasks/PnP.cpp"
 },

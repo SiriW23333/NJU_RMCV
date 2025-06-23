@@ -67,8 +67,8 @@ CMAKE_BINARY_DIR = /home/wxy/NJU_RMCV/build
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -225,30 +225,6 @@ tasks/plot.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/plot.cpp.s
 .PHONY : tasks/plot.cpp.s
 
-tasks/tracker.o: tasks/tracker.cpp.o
-.PHONY : tasks/tracker.o
-
-# target to build an object file
-tasks/tracker.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/tracker.cpp.o
-.PHONY : tasks/tracker.cpp.o
-
-tasks/tracker.i: tasks/tracker.cpp.i
-.PHONY : tasks/tracker.i
-
-# target to preprocess a source file
-tasks/tracker.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/tracker.cpp.i
-.PHONY : tasks/tracker.cpp.i
-
-tasks/tracker.s: tasks/tracker.cpp.s
-.PHONY : tasks/tracker.s
-
-# target to generate assembly for a file
-tasks/tracker.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/tasks/tracker.cpp.s
-.PHONY : tasks/tracker.cpp.s
-
 tasks/ukf.o: tasks/ukf.cpp.o
 .PHONY : tasks/ukf.o
 
@@ -294,9 +270,6 @@ help:
 	@echo "... tasks/plot.o"
 	@echo "... tasks/plot.i"
 	@echo "... tasks/plot.s"
-	@echo "... tasks/tracker.o"
-	@echo "... tasks/tracker.i"
-	@echo "... tasks/tracker.s"
 	@echo "... tasks/ukf.o"
 	@echo "... tasks/ukf.i"
 	@echo "... tasks/ukf.s"

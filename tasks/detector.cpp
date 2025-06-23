@@ -73,7 +73,6 @@ namespace auto_aim
         }
         std::sort(x_positions.begin(), x_positions.end());
 
-        // 然后在检查时只需查找位置索引
         bool has_lightbar_between = false;
         auto left_idx = std::find_if(x_positions.begin(), x_positions.end(),
                                       [&](const auto &p) { return p.second == left->id; });
@@ -142,12 +141,6 @@ namespace auto_aim
     return mean[0] > mean[2] ? Color::blue : Color::red;
   }
 
-  // 修改前：每次都创建新矩阵
-  // cv::Mat Detector::get_pattern(const cv::Mat &bgr_img, const Armor &armor)
-  // {
-  //   // ... 计算 ROI ...
-  //   return bgr_img(roi);
-  // }
 
   // 修改后：避免不必要的复制，直接使用ROI
   void Detector::get_pattern(const cv::Mat &bgr_img, const Armor &armor, cv::Mat &pattern)

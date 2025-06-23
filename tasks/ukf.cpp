@@ -51,6 +51,23 @@ UKF::VectorZ UKF::h(const VectorX& x) const {
     return z_pred;
 }
 
+// 添加预测位置方法的实现
+cv::Point3f UKF::predictPosition(double predict_time) const {
+    // 使用当前状态进行预测
+    VectorX x_pred = f(x_, predict_time);
+    
+    // 计算装甲板的预测位置
+    double xc = x_pred(0), zc = x_pred(3), yc = x_pred(6);
+    double yaw = x_pred(9), r = x_pred(11);
+    
+    // 装甲板实际位置
+    double xa = xc + r * std::cos(yaw);
+    double za = zc + r * std::sin(yaw);
+    double ya = yc;
+    
+    return cv::Point3f(xa, ya, za);
+}
+
 void UKF::generateSigmaPoints(const VectorX& x, const MatrixX& P, std::vector<VectorX>& Xsig) const {
     Eigen::Matrix<double, n_x, n_x> A = P.llt().matrixL();
     Xsig.resize(2 * n_x + 1);

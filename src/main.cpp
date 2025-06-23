@@ -4,10 +4,9 @@
 #include "fmt/format.h"
 #include <opencv2/opencv.hpp>
 #include "armor.hpp"
-#include "tracker.hpp"
 #include "PnP.hpp"
 #include "ukf.hpp"
-#include "plot.hpp"  // 添加轨迹可视化头文件
+#include "plot.hpp"
 #include <map>
 #include <vector>
 #include <thread>
@@ -15,6 +14,10 @@
 #include <condition_variable>
 #include <queue>
 #include <atomic>
+#include <fstream>    // 添加文件输出流
+#include <iomanip>    // 添加格式化输出
+
+#define VIDEO "/home/wxy/NJU_RMCV/test/video/linear_video/linear_difficult.avi"
 
 using namespace auto_aim;
 
@@ -22,7 +25,6 @@ using namespace auto_aim;
 auto_aim::TrajectoryBuffer trajectory_buffer;
 auto_aim::TrajectoryVisualizer trajectory_visualizer(500, 500);
 
-// clang-format off
 //  相机内参
 static const cv::Mat camera_matrix =
     (cv::Mat_<double>(3, 3) <<  1286.307063384126 , 0                  , 645.34450819155256, 
@@ -203,8 +205,19 @@ void detectionThread(FrameQueue& input_queue,
     // 新增：为每个装甲板维护一个UKF
     std::map<std::string, UKF> ukf_map;
     std::map<std::string, double> last_time_map;
-    double fps = 60.0; // 你的视频帧率
+    
+    // 新增：存储上一帧的预测值，用于误差分析
+    std::map<std::string, cv::Point3f> last_predict_pos;
+    std::map<std::string, double> last_predict_yaw;
+    
+    double fps = 60.0;
     double dt = 1.0 / fps;
+    
+    // 创建CSV文件并写入表头
+    std::ofstream csv_file("/home/wxy/NJU_RMCV/prediction_error.csv");
+    csv_file << "res_x,res_y,res_z,res_yaw" << std::endl;
+    
+    int frame_id = 0;
 
     while (running) {
         // 获取帧，如果队列为空则等待
@@ -213,6 +226,8 @@ void detectionThread(FrameQueue& input_queue,
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
             continue;
         }
+        
+        frame_id++;
         
         // 检测装甲板
         auto armors = detector.detect(frame);
@@ -260,17 +275,46 @@ void detectionThread(FrameQueue& input_queue,
                 color_value = cv::Scalar(0, 128, 0);
             }
             
-            // 生成唯一ID（可用颜色+编号等）
+            // 生成唯一ID
             std::string armor_id = fmt::format("{}_{}", COLORS[armor.color], ARMOR_NAMES[armor.name]);
+
+            // 当前帧的实际观测值
+            cv::Point3f actual_pos(tvec.at<double>(0), tvec.at<double>(1), tvec.at<double>(2));
+            double actual_yaw = yaw_val;
+
+            // 误差分析：计算实际值与上一帧预测值的差
+            if (last_predict_pos.find(armor_id) != last_predict_pos.end() && frame_id > 1) {
+                cv::Point3f last_pred = last_predict_pos[armor_id];
+                double last_pred_yaw = last_predict_yaw[armor_id];
+                
+                // 计算误差
+                double res_x = actual_pos.x - last_pred.x;
+                double res_y = actual_pos.y - last_pred.y;
+                double res_z = actual_pos.z - last_pred.z;
+                double res_yaw = actual_yaw - last_pred_yaw;
+                
+                // 角度误差标准化到 [-π, π]
+                while (res_yaw > M_PI) res_yaw -= 2 * M_PI;
+                while (res_yaw < -M_PI) res_yaw += 2 * M_PI;
+                
+                // 写入CSV文件
+                csv_file << std::fixed << std::setprecision(6)
+                    << res_x << ","
+                    << res_y << ","
+                    << res_z << ","
+                    << res_yaw << std::endl;
+                
+                // 在控制台输出误差信息（可选）
+                std::cout << fmt::format("Frame {}: {} - Error: x={:.3f}, y={:.3f}, z={:.3f}, yaw={:.3f}°",
+                    frame_id, armor_id, res_x, res_y, res_z, res_yaw * 180.0 / M_PI) << std::endl;
+            }
 
             // 观测向量zk = [xa, za, ya, yaw, r]
             UKF::VectorZ z;
-            // xa, za, ya 由tvec和yaw、r计算，这里直接用tvec
             double xa = tvec.at<double>(0);
             double za = tvec.at<double>(2);
             double ya = tvec.at<double>(1);
-            // yaw_val 已由 solvePose 得到
-            double r_val = 0.13 / 2; // 或根据实际情况赋值
+            double r_val = 0.13 / 2;
 
             z << xa, za, ya, yaw_val, r_val;
 
@@ -293,6 +337,17 @@ void detectionThread(FrameQueue& input_queue,
             ukf.predict(dt);
             ukf.update(z);
 
+            // 获取UKF状态并预测下一帧位置
+            UKF::VectorX current_state = ukf.getState();
+            
+            // 预测下一帧的位置（用于下一次误差计算）
+            cv::Point3f next_predict_pos = ukf.predictPosition(dt);
+            double next_predict_yaw = current_state(9) + current_state(10) * dt; // yaw + omega * dt
+            
+            // 存储预测值供下一帧使用
+            last_predict_pos[armor_id] = next_predict_pos;
+            last_predict_yaw[armor_id] = next_predict_yaw;
+
             // 保存UKF状态到ArmorInfo
             ArmorInfo info;
             info.color = COLORS[armor.color];
@@ -305,19 +360,17 @@ void detectionThread(FrameQueue& input_queue,
             info.pitch = pitch;
             info.roll = roll;
             info.color_value = color_value;
-            info.ukf_state = ukf.getState();
+            info.ukf_state = current_state;
             info.has_ukf = true;
             
             // 添加轨迹点
             if (info.has_ukf) {
-                // 使用UKF状态记录位置 (x, y, z)
                 trajectory_buffer.addPoint(armor_id, cv::Point3f(
-                    info.ukf_state(0),  // xc - 旋转中心x坐标
-                    info.ukf_state(6),  // yc - 旋转中心y坐标
-                    info.ukf_state(3)   // zc - 旋转中心z坐标
+                    info.ukf_state(0),  // xc
+                    info.ukf_state(6),  // yc
+                    info.ukf_state(3)   // zc
                 ));
             } else {
-                // 如果没有UKF数据，直接使用PnP解算得到的位置
                 trajectory_buffer.addPoint(armor_id, cv::Point3f(
                     tvec.at<double>(0),
                     tvec.at<double>(1),
@@ -331,6 +384,10 @@ void detectionThread(FrameQueue& input_queue,
         // 更新结果缓冲
         result_buffer.update(draw_img, armorInfoList);
     }
+    
+    // 关闭CSV文件
+    csv_file.close();
+    std::cout << "误差分析数据已保存到: /home/wxy/NJU_RMCV/prediction_error.csv" << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -339,7 +396,7 @@ int main(int argc, char *argv[])
     auto_aim::PNPSolver pnp_solver(camera_matrix, distort_coeffs);
     
     // 打开视频文件
-    cv::VideoCapture cap("/home/wxy/NJU_RMCV/src/linear1.avi");
+    cv::VideoCapture cap(VIDEO);
     if (!cap.isOpened()) {
         std::cerr << "错误：无法打开视频文件！" << std::endl;
         return -1;
@@ -438,9 +495,14 @@ int main(int argc, char *argv[])
         }
     }
     
+    // 在程序结束前添加统计信息
+    std::cout << "\n=== 程序运行完成 ===" << std::endl;
+    std::cout << "误差分析文件已生成: /home/wxy/NJU_RMCV/prediction_error.csv" << std::endl;
+    std::cout << "可以使用 Python 脚本 visualize_bias.py 来分析预测误差" << std::endl;
+    
     // 清理资源
     frame_queue.stop();
-    trajectory_buffer.clear();  // 清理轨迹数据
+    trajectory_buffer.clear();
     if (detect_thread.joinable()) {
         detect_thread.join();
     }
